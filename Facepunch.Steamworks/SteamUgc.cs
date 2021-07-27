@@ -25,7 +25,7 @@ namespace Steamworks
 
 		internal static void InstallEvents( bool server )
 		{
-			Dispatch.Install<DownloadItemResult_t>( x => OnDownloadItemResult?.Invoke( x.Result ), server );
+			Dispatch.Install<DownloadItemResult_t>( x => OnDownloadItemResult?.Invoke( x.Result, x.AppID.Value, x.PublishedFileId ), server );
 			Dispatch.Install<RemoteStoragePublishedFileSubscribed_t>( x => OnItemSubscribed?.Invoke( x.AppID.Value, x.PublishedFileId ), server );
 			Dispatch.Install<RemoteStoragePublishedFileUnsubscribed_t>( x => OnItemUnsubscribed?.Invoke( x.AppID.Value, x.PublishedFileId ), server );
 			Dispatch.Install<ItemInstalled_t>( x => OnItemInstalled?.Invoke( x.AppID.Value, x.PublishedFileId ), server );
@@ -34,7 +34,7 @@ namespace Steamworks
 		/// <summary>
 		/// Posted after Download call
 		/// </summary>
-		public static event Action<Result> OnDownloadItemResult;
+		public static event Action<Result, AppId, PublishedFileId> OnDownloadItemResult;
 		
 		/// <summary>
 		/// Posted when new item is subscribed
@@ -72,6 +72,7 @@ namespace Steamworks
 		{
 			var item = new Steamworks.Ugc.Item( fileId );
 
+			// Comment by AM: By default download is now cancelled if not completed in 60 seconds?
 			if ( ct == default )
 				ct = new CancellationTokenSource( TimeSpan.FromSeconds( 60 ) ).Token;
 
@@ -85,18 +86,24 @@ namespace Steamworks
 			// for the Callback DownloadItemResult_t before calling 
 			// GetItemInstallInfo or accessing the workshop item on disk.
 
+			// Comment by AM: is this really called when download is started and not when finished?
+			// https://partner.steamgames.com/doc/api/ISteamUGC#DownloadItemResult_t
+			// "Called when a workshop item has been downloaded."
+
 			// Wait for DownloadItemResult_t
 			{
-				Action<Result> onDownloadStarted = null;
+				Action<Result, AppId, PublishedFileId> onDownloadResult = null;
 
 				try
 				{
-					var downloadStarted = false;
-					
-					onDownloadStarted = r => downloadStarted = true;
-					OnDownloadItemResult += onDownloadStarted;
+					var downloadResultReceived = false;
 
-					while ( downloadStarted == false )
+					// Comment by AM: Should AppId be checked too?
+					// From Steam doc: "NOTE: This callback goes out to all running applications, ensure that the app ID associated with the item matches what you expect."
+					onDownloadResult = (result, appId, fileInResult) => downloadResultReceived = downloadResultReceived || fileInResult == fileId; // Making sure the file id is correct
+					OnDownloadItemResult += onDownloadResult;
+
+					while ( downloadResultReceived == false )
 					{
 						if ( ct.IsCancellationRequested )
 							break;
@@ -106,7 +113,7 @@ namespace Steamworks
 				}
 				finally
 				{
-					OnDownloadItemResult -= onDownloadStarted;
+					OnDownloadItemResult -= onDownloadResult;
 				}
 			}
 
