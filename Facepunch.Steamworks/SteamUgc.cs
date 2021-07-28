@@ -195,7 +195,7 @@ namespace Steamworks
 		/// <param name="maxItemCount">The maximum number of items to return</param>
 		/// <returns>Array of PublishedFileIds the user has subscribed to</returns>
 		public static PublishedFileId[] GetSubscribedItems(uint maxItemCount)
-        {
+		{
 			uint itemCount = Internal.GetNumSubscribedItems();
 			if (itemCount > maxItemCount)
 			{
@@ -208,9 +208,9 @@ namespace Steamworks
 			}
 			uint realCount = Internal.GetSubscribedItems(result, itemCount);
 			if (realCount < result.Length)
-            {
+			{
 				Array.Resize(ref result, (int)realCount);
-            }
+			}
 			return result;
 		}
 
