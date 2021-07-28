@@ -189,6 +189,31 @@ namespace Steamworks
 			return item;
 		}
 
+		/// <summary>
+		/// Gets a list of all of the items the current user is subscribed to for the current game.
+		/// </summary>
+		/// <param name="maxItemCount">The maximum number of items to return</param>
+		/// <returns>Array of PublishedFileIds the user has subscribed to</returns>
+		public static PublishedFileId[] GetSubscribedItems(uint maxItemCount)
+        {
+			uint itemCount = Internal.GetNumSubscribedItems();
+			if (itemCount > maxItemCount)
+			{
+				itemCount = maxItemCount;
+			}
+			var result = new PublishedFileId[itemCount];
+			if (itemCount <= 0)
+			{
+				return result;
+			}
+			uint realCount = Internal.GetSubscribedItems(result, itemCount);
+			if (realCount < result.Length)
+            {
+				Array.Resize(ref result, (int)realCount);
+            }
+			return result;
+		}
+
 		public static async Task<bool> StartPlaytimeTracking(PublishedFileId fileId)
 		{
 			var result = await Internal.StartPlaytimeTracking(new[] {fileId}, 1);
