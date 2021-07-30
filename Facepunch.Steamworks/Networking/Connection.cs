@@ -66,6 +66,18 @@ namespace Steamworks.Data
 			set => SteamNetworkingSockets.Internal.SetConnectionName( this, value );
 		}
 
+		// Disabled the new version of this function: https://github.com/Facepunch/Facepunch.Steamworks/issues/585
+
+		/// <summary>
+		/// This is the best version to use.
+		/// </summary>
+		public Result SendMessage(IntPtr ptr, int size, SendType sendType = SendType.Reliable)
+		{
+			long messageNumber = 0;
+			return SteamNetworkingSockets.Internal.SendMessageToConnection(this, ptr, (uint)size, (int)sendType, ref messageNumber);
+		}
+
+#if false
 		/// <summary>
 		/// This is the best version to use.
 		/// </summary>
@@ -93,6 +105,7 @@ namespace Steamworks.Data
                 ? Result.OK
                 : (Result)(-messageNumber);
         }
+#endif
 
 		/// <summary>
 		/// Ideally should be using an IntPtr version unless you're being really careful with the byte[] array and 
