@@ -214,12 +214,18 @@ namespace Steamworks
 			return result;
 		}
 
+		public static async Task<bool> StartPlaytimeTracking(PublishedFileId[] fileIds)
+		{
+			var result = await Internal.StartPlaytimeTracking(fileIds, 1);
+			return result.Value.Result == Result.OK;
+		}
+
 		public static async Task<bool> StartPlaytimeTracking(PublishedFileId fileId)
 		{
 			var result = await Internal.StartPlaytimeTracking(new[] {fileId}, 1);
 			return result.Value.Result == Result.OK;
 		}
-		
+
 		public static async Task<bool> StopPlaytimeTracking(PublishedFileId fileId)
 		{
 			var result = await Internal.StopPlaytimeTracking(new[] {fileId}, 1);
