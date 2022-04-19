@@ -387,5 +387,51 @@ namespace Steamworks
 			return returnValue;
 		}
 		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _IsSteamRunningOnSteamDeck( IntPtr self );
+		
+		#endregion
+		internal bool IsSteamRunningOnSteamDeck()
+		{
+			var returnValue = _IsSteamRunningOnSteamDeck( Self );
+			return returnValue;
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUtils_ShowFloatingGamepadTextInput", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _ShowFloatingGamepadTextInput( IntPtr self, TextInputMode eKeyboardMode, int nTextFieldXPosition, int nTextFieldYPosition, int nTextFieldWidth, int nTextFieldHeight );
+		
+		#endregion
+		internal bool ShowFloatingGamepadTextInput( TextInputMode eKeyboardMode, int nTextFieldXPosition, int nTextFieldYPosition, int nTextFieldWidth, int nTextFieldHeight )
+		{
+			var returnValue = _ShowFloatingGamepadTextInput( Self, eKeyboardMode, nTextFieldXPosition, nTextFieldYPosition, nTextFieldWidth, nTextFieldHeight );
+			return returnValue;
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUtils_SetGameLauncherMode", CallingConvention = Platform.CC)]
+		private static extern void _SetGameLauncherMode( IntPtr self, [MarshalAs( UnmanagedType.U1 )] bool bLauncherMode );
+		
+		#endregion
+		internal void SetGameLauncherMode( [MarshalAs( UnmanagedType.U1 )] bool bLauncherMode )
+		{
+			_SetGameLauncherMode( Self, bLauncherMode );
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUtils_DismissFloatingGamepadTextInput", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _DismissFloatingGamepadTextInput( IntPtr self );
+		
+		#endregion
+		internal bool DismissFloatingGamepadTextInput()
+		{
+			var returnValue = _DismissFloatingGamepadTextInput( Self );
+			return returnValue;
+		}
+		
 	}
 }

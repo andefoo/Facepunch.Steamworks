@@ -15,12 +15,12 @@ namespace Steamworks
 			SetupInterface( IsGameServer );
 		}
 		
-		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_SteamUGC_v015", CallingConvention = Platform.CC)]
-		internal static extern IntPtr SteamAPI_SteamUGC_v015();
-		public override IntPtr GetUserInterfacePointer() => SteamAPI_SteamUGC_v015();
-		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_SteamGameServerUGC_v015", CallingConvention = Platform.CC)]
-		internal static extern IntPtr SteamAPI_SteamGameServerUGC_v015();
-		public override IntPtr GetServerInterfacePointer() => SteamAPI_SteamGameServerUGC_v015();
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_SteamUGC_v016", CallingConvention = Platform.CC)]
+		internal static extern IntPtr SteamAPI_SteamUGC_v016();
+		public override IntPtr GetUserInterfacePointer() => SteamAPI_SteamUGC_v016();
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_SteamGameServerUGC_v016", CallingConvention = Platform.CC)]
+		internal static extern IntPtr SteamAPI_SteamGameServerUGC_v016();
+		public override IntPtr GetServerInterfacePointer() => SteamAPI_SteamGameServerUGC_v016();
 		
 		
 		#region FunctionMeta
@@ -462,6 +462,30 @@ namespace Steamworks
 		internal bool SetRankedByTrendDays( UGCQueryHandle_t handle, uint unDays )
 		{
 			var returnValue = _SetRankedByTrendDays( Self, handle, unDays );
+			return returnValue;
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUGC_SetTimeCreatedDateRange", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _SetTimeCreatedDateRange( IntPtr self, UGCQueryHandle_t handle, RTime32 rtStart, RTime32 rtEnd );
+		
+		#endregion
+		internal bool SetTimeCreatedDateRange( UGCQueryHandle_t handle, RTime32 rtStart, RTime32 rtEnd )
+		{
+			var returnValue = _SetTimeCreatedDateRange( Self, handle, rtStart, rtEnd );
+			return returnValue;
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUGC_SetTimeUpdatedDateRange", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _SetTimeUpdatedDateRange( IntPtr self, UGCQueryHandle_t handle, RTime32 rtStart, RTime32 rtEnd );
+		
+		#endregion
+		internal bool SetTimeUpdatedDateRange( UGCQueryHandle_t handle, RTime32 rtStart, RTime32 rtEnd )
+		{
+			var returnValue = _SetTimeUpdatedDateRange( Self, handle, rtStart, rtEnd );
 			return returnValue;
 		}
 		
@@ -981,6 +1005,29 @@ namespace Steamworks
 		{
 			var returnValue = _DeleteItem( Self, nPublishedFileID );
 			return new CallResult<DeleteItemResult_t>( returnValue, IsServer );
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUGC_ShowWorkshopEULA", CallingConvention = Platform.CC)]
+		[return: MarshalAs( UnmanagedType.I1 )]
+		private static extern bool _ShowWorkshopEULA( IntPtr self );
+		
+		#endregion
+		internal bool ShowWorkshopEULA()
+		{
+			var returnValue = _ShowWorkshopEULA( Self );
+			return returnValue;
+		}
+		
+		#region FunctionMeta
+		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamUGC_GetWorkshopEULAStatus", CallingConvention = Platform.CC)]
+		private static extern SteamAPICall_t _GetWorkshopEULAStatus( IntPtr self );
+		
+		#endregion
+		internal CallResult<WorkshopEULAStatus_t> GetWorkshopEULAStatus()
+		{
+			var returnValue = _GetWorkshopEULAStatus( Self );
+			return new CallResult<WorkshopEULAStatus_t>( returnValue, IsServer );
 		}
 		
 	}
