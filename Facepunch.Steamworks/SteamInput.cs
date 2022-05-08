@@ -19,6 +19,19 @@ namespace Steamworks
 
 
 		/// <summary>
+		/// Must be called when starting use of the ISteamInput interface.
+		/// </summary>
+		public static void Init( bool explicitlyCallRunFrame = false )
+		{
+			Internal.Init( explicitlyCallRunFrame );
+		}
+
+		public static bool Shutdown()
+		{
+			return Internal.Shutdown();
+		}
+
+		/// <summary>
 		/// You shouldn't really need to call this because it gets called by <see cref="SteamClient.RunCallbacks"/>
 		/// but Valve think it might be a nice idea if you call it right before you get input info -
 		/// just to make sure the info you're getting is 100% up to date.
