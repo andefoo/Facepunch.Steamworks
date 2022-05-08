@@ -197,7 +197,7 @@ namespace Steamworks
 		private static int _botcount = 0;
 
 		/// <summary>
-		/// Gets or sets the current Map Name. 
+		/// Gets or sets the current Map Name. Max length: 32
 		/// </summary>
 		public static string MapName
 		{
@@ -207,7 +207,9 @@ namespace Steamworks
 		private static string _mapname;
 
 		/// <summary>
-		/// Gets or sets the current ModDir.
+		/// Gets or sets the current ModDir. Max length: 32
+		/// This should be the same directory game where gets installed into. Just the folder name, not the whole path. e.g. "Spacewar".
+		/// NOTE: This is required for all game servers and can only be set before calling LogOn or LogOnAnonymous.
 		/// </summary>
 		public static string ModDir
 		{
@@ -218,6 +220,9 @@ namespace Steamworks
 
 		/// <summary>
 		/// Gets the current product.
+		/// Sets the game product identifier. This is currently used by the master server for version checking purposes.
+		/// Converting the games app ID to a string for this is recommended.
+		/// NOTE: This is required for all game servers and can only be set before calling LogOn or LogOnAnonymous.
 		/// </summary>
 		public static string Product
 		{
@@ -228,6 +233,8 @@ namespace Steamworks
 
 		/// <summary>
 		/// Gets or sets the current Product.
+		/// Sets the game description. Setting this to the full name of your game is recommended.
+		/// NOTE: This is required for all game servers and can only be set before calling LogOn or LogOnAnonymous.
 		/// </summary>
 		public static string GameDescription
 		{
@@ -237,7 +244,7 @@ namespace Steamworks
 		private static string _gameDescription = "";
 
 		/// <summary>
-		/// Gets or sets the current ServerName.
+		/// Gets or sets the current ServerName. Max length: 64
 		/// </summary>
 		public static string ServerName
 		{
@@ -273,9 +280,41 @@ namespace Steamworks
 		private static string _gametags = "";
 
 		/// <summary>
+		/// Gets or sets the current GameData. 
+		/// From Steamworks: The new "gamedata" value to set. Must not be NULL or an empty string (""). This can not be longer than 2048 bytes.
+		/// 
+		/// Sets a string defining the "gamedata" for this server, this is optional, but if set it allows users to filter in the matchmaking/server-browser interfaces based on the value.
+		/// This is usually formatted as a comma or semicolon separated list.
+		/// Don't set this unless it actually changes, its only uploaded to the master once; when acknowledged.
+		/// </summary>
+		public static string GameData
+		{
+			get => _gameData;
+			set
+			{
+				if (string.IsNullOrEmpty(value))
+				{
+					// What to use here? Manual says cannot be called as empty for empty string, not sure what happens if that is done though.
+					value = " "; 
+				}
+				if ( _gameData == value ) return;
+				Internal.SetGameData( value );
+				_gameData = value;
+			}
+		}
+		private static string _gameData = "";
+
+		/// <summary>
 		/// Gets the SteamId of the server.
 		/// </summary>
 		public static SteamId SteamId => Internal.GetSteamID();
+
+		/// <summary>	
+		///  Checks if the master server has alerted us that we are out of date.
+		///  This reverts back to false after calling this function.
+		///  true if the master server wants this game server to update and restart; otherwise, false.
+		/// </summary>
+		public static bool WasRestartRequested => Internal.WasRestartRequested();
 
 		/// <summary>
 		/// Log onto Steam anonymously.
