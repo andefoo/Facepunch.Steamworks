@@ -26,10 +26,22 @@ namespace Steamworks
 			set => SteamInput.Internal.ActivateActionSet( Handle, SteamInput.Internal.GetActionSetHandle( value ) );
 		}
 
+		/// <summary>
+		/// Returns ActionSetHandle as ulong
+		/// </summary>
+		public ulong GetActionSetHandle( string actionSet )
+		{
+			return SteamInput.Internal.GetActionSetHandle( actionSet );
+		}
+
+		public void ActivateActionSet( ulong actionSetHandle )
+		{
+			SteamInput.Internal.ActivateActionSet( Handle, actionSetHandle );
+		}
+
 		public void DeactivateLayer( string layer ) => SteamInput.Internal.DeactivateActionSetLayer( Handle, SteamInput.Internal.GetActionSetHandle( layer ) );
 		public void ActivateLayer( string layer ) => SteamInput.Internal.ActivateActionSetLayer( Handle, SteamInput.Internal.GetActionSetHandle( layer ) );
 		public void ClearLayers() => SteamInput.Internal.DeactivateAllActionSetLayers( Handle );
-
 
 		/// <summary>
 		/// Returns the current state of the supplied digital game action
@@ -77,6 +89,22 @@ namespace Steamworks
 		public AnalogState GetAnalogState( ulong actionHandle )
 		{
 			return SteamInput.Internal.GetAnalogActionData( Handle, actionHandle );
+		}
+
+		private static InputActionOrigin[] sm_inputActionOriginsBuffer = new InputActionOrigin[ISteamInput.STEAM_INPUT_MAX_ORIGINS];
+
+		public void GetDigitalActionOrigins( ulong actionSetHandle, ulong digitalActionHandle, out int? origin1, out int? origin2 )
+		{
+			int count = SteamInput.Internal.GetDigitalActionOrigins( Handle, actionSetHandle, digitalActionHandle, sm_inputActionOriginsBuffer );
+			origin1 = count >= 1 ? (int)sm_inputActionOriginsBuffer[0] : null;
+			origin2 = count >= 2 ? (int)sm_inputActionOriginsBuffer[1] : null;
+		}
+
+		public void GetAnalogActionOrigins( ulong actionSetHandle, ulong analogActionHandle, out int? origin1, out int? origin2 )
+		{
+			int count = SteamInput.Internal.GetDigitalActionOrigins( Handle, actionSetHandle, analogActionHandle, sm_inputActionOriginsBuffer );
+			origin1 = count >= 1 ? (int)sm_inputActionOriginsBuffer[0] : null;
+			origin2 = count >= 2 ? (int)sm_inputActionOriginsBuffer[1] : null;
 		}
 
 		/// <summary>

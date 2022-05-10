@@ -97,6 +97,18 @@ namespace Steamworks
 			return Internal.GetGlyphPNGForActionOrigin( origin, size, 0 );
 		}
 
+		public static string GetPngActionGlyph( int inputActionOrigin, GlyphSize size, uint unFlags )
+		{
+			InputActionOrigin origin = (InputActionOrigin)inputActionOrigin;
+			return Internal.GetGlyphPNGForActionOrigin( origin, size, unFlags );
+		}
+
+		public static string GetStringForActionOrigin( int inputActionOrigin )
+		{
+			InputActionOrigin origin = (InputActionOrigin)inputActionOrigin;
+			return Internal.GetStringForActionOrigin( origin );
+		}
+
 		/// <summary>
 		/// Return an absolute path to the SVF image glyph for the provided digital action name. The current
 		/// action set in use for the controller will be used for the lookup. You should cache the result and

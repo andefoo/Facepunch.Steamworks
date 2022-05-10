@@ -216,7 +216,20 @@ namespace Steamworks
 			var returnValue = _GetDigitalActionOrigins( Self, inputHandle, actionSetHandle, digitalActionHandle, ref originsOut );
 			return returnValue;
 		}
-		
+
+
+		internal const int STEAM_INPUT_MAX_ORIGINS = 8;
+
+		/// <summary>
+		/// This one should work better than the other one?
+		/// Result buffer size should be at least STEAM_INPUT_MAX_ORIGINS = 8
+		/// </summary>
+		internal int GetDigitalActionOrigins( InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputDigitalActionHandle_t digitalActionHandle, InputActionOrigin[] result )
+		{
+			var returnValue = _GetDigitalActionOrigins( Self, inputHandle, actionSetHandle, digitalActionHandle, ref result[0] );
+			return returnValue;
+		}
+
 		#region FunctionMeta
 		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamInput_GetStringForDigitalActionName", CallingConvention = Platform.CC)]
 		private static extern Utf8StringPointer _GetStringForDigitalActionName( IntPtr self, InputDigitalActionHandle_t eActionHandle );
@@ -260,7 +273,17 @@ namespace Steamworks
 			var returnValue = _GetAnalogActionOrigins( Self, inputHandle, actionSetHandle, analogActionHandle, ref originsOut );
 			return returnValue;
 		}
-		
+
+		/// <summary>
+		/// This one should work better than the other one?
+		/// Result buffer size should be at least STEAM_INPUT_MAX_ORIGINS = 8
+		/// </summary>
+		internal int GetAnalogActionOrigins( InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, InputActionOrigin[] result )
+		{
+			var returnValue = _GetAnalogActionOrigins( Self, inputHandle, actionSetHandle, analogActionHandle, ref result[0] );
+			return returnValue;
+		}
+
 		#region FunctionMeta
 		[DllImport( Platform.LibraryName, EntryPoint = "SteamAPI_ISteamInput_GetGlyphPNGForActionOrigin", CallingConvention = Platform.CC)]
 		private static extern Utf8StringPointer _GetGlyphPNGForActionOrigin( IntPtr self, InputActionOrigin eOrigin, GlyphSize eSize, uint unFlags );
