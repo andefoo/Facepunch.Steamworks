@@ -40,6 +40,22 @@ namespace Steamworks
 		}
 
 		/// <summary>
+		/// Returns InputDigitalActionHandle_t as ulong
+		/// </summary>
+		public ulong GetDigitalActionHandle( string actionName )
+		{
+			return SteamInput.GetDigitalActionHandle( actionName );
+		}
+
+		/// <summary>
+		/// Returns the current state of the supplied digital game action, actionHandle will be used as InputDigitalActionHandle_t
+		/// </summary>
+		public DigitalState GetDigitalState( ulong actionHandle )
+		{
+			return SteamInput.Internal.GetDigitalActionData( Handle, actionHandle );
+		}
+
+		/// <summary>
 		/// Returns the current state of these supplied analog game action
 		/// </summary>
 		public AnalogState GetAnalogState( string actionName )
@@ -47,6 +63,53 @@ namespace Steamworks
 			return SteamInput.Internal.GetAnalogActionData( Handle, SteamInput.GetAnalogActionHandle( actionName ) );
 		}
 
+		/// <summary>
+		/// Returns InputAnalogActionHandle_t as ulong
+		/// </summary>
+		public ulong GetAnalogActionHandle( string actionName )
+		{
+			return SteamInput.GetAnalogActionHandle( actionName );
+		}
+
+		/// <summary>
+		/// Returns the current state of these supplied analog game action, actionHandle ulong to InputAnalogActionHandle_t
+		/// </summary>
+		public AnalogState GetAnalogState( ulong actionHandle )
+		{
+			return SteamInput.Internal.GetAnalogActionData( Handle, actionHandle );
+		}
+
+		/// <summary>
+		/// Returns the current state of these supplied analog game action
+		/// </summary>
+		public MotionState GetMotionState()
+		{
+			return SteamInput.Internal.GetMotionData( Handle );
+		}
+
+		/// <summary>
+		/// Invokes the Steam overlay and brings up the binding screen.
+		/// Returns true for success; false if overlay is disabled/unavailable, or the user is not in Big Picture Mode.
+		/// </summary>
+		public bool ShowBindingPanel()
+		{
+			return SteamInput.Internal.ShowBindingPanel( Handle );
+		}
+
+		public void TriggerVibration( ushort usLeftSpeed, ushort usRightSpeed )
+		{
+			SteamInput.Internal.TriggerVibration( Handle, usLeftSpeed, usRightSpeed );
+		}
+
+		public void TriggerVibration( ushort usLeftSpeed, ushort usRightSpeed, ushort usLeftTriggerSpeed, ushort usRightTriggerSpeed )
+		{
+			SteamInput.Internal.TriggerVibrationExtended( Handle, usLeftSpeed, usRightSpeed, usLeftTriggerSpeed, usRightTriggerSpeed );
+		}
+
+		public void SetLEDColor( byte nColorR, byte nColorG, byte nColorB, uint nFlags )
+		{
+			SteamInput.Internal.SetLEDColor( Handle, nColorR, nColorG, nColorB, nFlags );
+		}
 
 		public override string ToString() => $"{InputType}.{Handle.Value}";
 
@@ -69,7 +132,7 @@ namespace Steamworks
 	}
 
 	[StructLayout( LayoutKind.Sequential, Pack = 1 )]
-	internal struct MotionState
+	public struct MotionState
 	{
 		public float RotQuatX; // rotQuatX float
 		public float RotQuatY; // rotQuatY float
