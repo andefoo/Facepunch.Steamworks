@@ -93,9 +93,9 @@ namespace Generator
                     }
 
                     if (ename.StartsWith( $"k_E{name}" ))
-	                    ename = ename[(name.Length + 3)..];
+						ename = ename.Substring( name.Length + 3 );     //This would require newer SDK: ename = ename[(name.Length + 3)..];
 
-                    WriteLine( $"{ename.Trim( ' ', '_' )} = {entry.Value}," );
+					WriteLine( $"{ename.Trim( ' ', '_' )} = {entry.Value}," );
                 }
             }
             EndBlock();
