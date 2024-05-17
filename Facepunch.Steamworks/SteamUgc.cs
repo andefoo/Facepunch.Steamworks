@@ -220,7 +220,20 @@ namespace Steamworks
 
 		public static async Task<bool> StartPlaytimeTracking(PublishedFileId[] fileIds)
 		{
-			var result = await Internal.StartPlaytimeTracking(fileIds, 1);
+			if (fileIds == null)
+			{ 
+				return false;
+			}
+			var count = fileIds.Length;
+			if (count <= 0)
+			{ 
+				return false;
+			}
+			if (count > 100)
+			{
+				count = 100; // 100 is the max according to https://partner.steamgames.com/doc/api/ISteamUGC
+			}
+			var result = await Internal.StartPlaytimeTracking(fileIds, (uint)count);
 			return result.Value.Result == Result.OK;
 		}
 
